@@ -116,3 +116,18 @@ bool Server::GetCircle(int ID, Circle & _circle)
 	delete tempCircle; //delete new object and return true
 	return true;
 }
+
+bool Server::sendSetPlayer(int ID, Circle & _circle)
+{
+	//SEND PACKET TYPE
+	if (!SendPacketType(ID, P_SetPlayer))
+		return false;
+	int bufferLength = sizeof(Circle);
+	//SEND BUFFER LENGTH
+	if (!SendInt(ID, bufferLength))
+		return false;
+	//SEND OBJECT DATA
+	if (!sendall(ID, (char*)&_circle, bufferLength))
+		return false;
+	return true;
+}

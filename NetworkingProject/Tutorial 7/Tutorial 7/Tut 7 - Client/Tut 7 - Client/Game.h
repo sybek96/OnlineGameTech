@@ -54,6 +54,10 @@ private:
 
 	SDL_Texture* gTexture2 = NULL;
 
+	SDL_Texture* textureGreenCircle = NULL;
+	SDL_Texture* textureRedCircle = NULL;
+	SDL_Texture* textureBlueCircle = NULL;
+
 	std::vector<SDL_Texture*> m_wallTextures;
 
 	Circle m_player;

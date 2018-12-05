@@ -29,6 +29,19 @@ bool Client::ProcessPacket(Packet _packettype)
 	case P_Authoritative: //If packet is authoritative type
 	{
 		game->setAuthorative(true);
+		break;
+	}
+	case P_SetPlayer:
+	{
+		Circle* circle = new Circle();
+		if (!GetCircle(*circle))
+		{
+			delete circle;
+			return false;
+		}
+		game->setPlayer(*circle);
+		delete circle;
+		break;
 	}
 	default: //If packet type is not accounted for
 		std::cout << "Unrecognized packet: " << _packettype << std::endl; //Display that packet was not found

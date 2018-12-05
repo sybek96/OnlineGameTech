@@ -14,7 +14,8 @@ enum Packet
 	P_ChatMessage,
 	P_Test,
 	P_CircleData,
-	P_Authoritative
+	P_Authoritative,
+	P_SetPlayer
 };
 class Client
 {

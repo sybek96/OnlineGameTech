@@ -50,10 +50,22 @@ bool Server::ListenForNewConnection()
 		CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)ClientHandlerThread, (LPVOID)(TotalConnections), NULL, NULL); //Create Thread to handle this client. The index in the socket array for this thread is the value (i).
 		std::string MOTD = "MOTD: Welcome! This is the message of the day!.";
 		SendString(TotalConnections, MOTD);
-		if (TotalConnections == 0)
+		if (TotalConnections == 0) //player 1
 		{	
 			//if this is the first connection make them the authoritative host.
 			SendPacketType(TotalConnections, P_Authoritative);
+
+			//create player 1 circle and send data to that client
+			Circle playerCircle(10, 10, 10, Color::RED);
+			sendSetPlayer(TotalConnections, playerCircle);
+		}
+		else if (TotalConnections == 1) //player 2
+		{
+
+		}
+		else //player 3
+		{
+
 		}
 		TotalConnections += 1; //Incremenent total # of clients that have connected
 		return true;

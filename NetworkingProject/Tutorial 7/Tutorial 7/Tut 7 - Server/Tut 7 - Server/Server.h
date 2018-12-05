@@ -12,7 +12,8 @@ enum Packet
 	P_ChatMessage,
 	P_Test,
 	P_CircleData,
-	P_Authoritative
+	P_Authoritative,
+	P_SetPlayer
 };
 
 class Server
@@ -38,6 +39,8 @@ private:
 	bool GetString(int ID, std::string & _string);
 
 	bool ProcessPacket(int ID, Packet _packettype);
+
+	bool sendSetPlayer(int ID, Circle & _circle);
 
 	static void ClientHandlerThread(int ID);
 

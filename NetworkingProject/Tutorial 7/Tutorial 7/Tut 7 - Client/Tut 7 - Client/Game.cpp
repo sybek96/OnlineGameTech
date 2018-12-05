@@ -88,6 +88,24 @@ bool Game::loadMedia()
 		printf("Failed to load texture image x.png!\n");
 		success = false;
 	}
+	textureBlueCircle = loadTexture("blue.png");
+	if (textureBlueCircle == NULL)
+	{
+		printf("Failed to load texture image blue.png!\n");
+		success = false;
+	}
+	textureRedCircle = loadTexture("red.png");
+	if (textureRedCircle == NULL)
+	{
+		printf("Failed to load texture image red.png!\n");
+		success = false;
+	}
+	textureGreenCircle = loadTexture("green.png");
+	if (textureGreenCircle == NULL)
+	{
+		printf("Failed to load texture image green.png!\n");
+		success = false;
+	}
 
 	return success;
 }
@@ -136,7 +154,21 @@ void Game::draw()
 
 void Game::setPlayer(Circle newPlayer)
 {
-	m_player = newPlayer;
+	//m_player = newPlayer;
+	//switch (m_player.m_color)
+	//{
+	//case Color::RED:
+	//	m_player.SetTexture(textureRedCircle);
+	//	break;
+	//case Color::BLUE:
+	//	m_player.SetTexture(textureBlueCircle);
+	//	break;
+	//case Color::GREEN:
+	//	m_player.SetTexture(textureGreenCircle);
+	//	break;
+	//default:
+	//	break;
+	//}
 }
 
 void Game::setAuthorative(bool newState)
