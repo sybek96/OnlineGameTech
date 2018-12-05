@@ -86,15 +86,15 @@ bool Server::GetString(int ID, std::string & _string)
 
 bool Server::SendCircle(int ID, Circle & _circle)
 {
-	//PACKET TYPE SEND
+	//SEND PACKET TYPE
 	if (!SendPacketType(ID, P_CircleData))
 		return false;
-	int bufferlength = sizeof(Circle); //Find string buffer length
-	//BUFFER LENGTH SEND
-	if (!SendInt(ID, bufferlength)) //Send length of string buffer, If sending buffer length fails...
-		return false; //Return false: Failed to send string buffer length
-	//DATA SEND
-	if (!sendall(ID, (char*)&_circle, bufferlength))
+	int bufferLength = sizeof(Circle);
+	//SEND BUFFER LENGTH
+	if (!SendInt(ID, bufferLength))
+		return false;
+	//SEND OBJECT DATA
+	if (!sendall(ID, (char*)&_circle, bufferLength))
 		return false;
 	return true;
 }

@@ -1,4 +1,6 @@
 #include "Client.h"
+#include <SDL.h>
+#include <SDL_image.h>
 
 bool Client::ProcessPacket(Packet _packettype)
 {
@@ -20,9 +22,13 @@ bool Client::ProcessPacket(Packet _packettype)
 			delete circle;
 			return false;
 		}
-		std::cout << circle->m_radius + " is my radius" << std::endl;
+		std::cout << "I got data from another circle with radius of:" + std::to_string(circle->m_radius) << std::endl;
 		delete circle;
 		break;
+	}
+	case P_Authoritative: //If packet is authoritative type
+	{
+		game->setAuthorative(true);
 	}
 	default: //If packet type is not accounted for
 		std::cout << "Unrecognized packet: " << _packettype << std::endl; //Display that packet was not found

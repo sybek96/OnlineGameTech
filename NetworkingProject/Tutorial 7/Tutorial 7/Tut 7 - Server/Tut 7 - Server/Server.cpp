@@ -44,11 +44,17 @@ bool Server::ListenForNewConnection()
 	}
 	else //If client connection properly accepted
 	{
+
 		std::cout << "Client Connected! ID:" << TotalConnections << std::endl;
 		Connections[TotalConnections] = newConnection; //Set socket in array to be the newest connection before creating the thread to handle this client's socket.
 		CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)ClientHandlerThread, (LPVOID)(TotalConnections), NULL, NULL); //Create Thread to handle this client. The index in the socket array for this thread is the value (i).
 		std::string MOTD = "MOTD: Welcome! This is the message of the day!.";
 		SendString(TotalConnections, MOTD);
+		if (TotalConnections == 0)
+		{	
+			//if this is the first connection make them the authoritative host.
+			SendPacketType(TotalConnections, P_Authoritative);
+		}
 		TotalConnections += 1; //Incremenent total # of clients that have connected
 		return true;
 	}
@@ -58,52 +64,52 @@ bool Server::ProcessPacket(int ID, Packet _packettype)
 {
 	switch (_packettype)
 	{
-	case P_ChatMessage: //Packet Type: chat message
-	{
-		std::string Message; //string to store our message we received
-		if (!GetString(ID, Message)) //Get the chat message and store it in variable: Message
-			return false; //If we do not properly get the chat message, return false
-						  //Next we need to send the message out to each user
-		for (int i = 0; i < TotalConnections; i++)
+		case P_ChatMessage: //Packet Type: chat message
 		{
-			if (i == ID) //If connection is the user who sent the message...
-				continue;//Skip to the next user since there is no purpose in sending the message back to the user who sent it.
-			if (!SendString(i, Message)) //Send message to connection at index i, if message fails to be sent...
+			std::string Message; //string to store our message we received
+			if (!GetString(ID, Message)) //Get the chat message and store it in variable: Message
+				return false; //If we do not properly get the chat message, return false
+							  //Next we need to send the message out to each user
+			for (int i = 0; i < TotalConnections; i++)
 			{
-				std::cout << "Failed to send message from client ID: " << ID << " to client ID: " << i << std::endl;
+				if (i == ID) //If connection is the user who sent the message...
+					continue;//Skip to the next user since there is no purpose in sending the message back to the user who sent it.
+				if (!SendString(i, Message)) //Send message to connection at index i, if message fails to be sent...
+				{
+					std::cout << "Failed to send message from client ID: " << ID << " to client ID: " << i << std::endl;
+				}
 			}
+			std::cout << "Processed chat message packet from user ID: " << ID << std::endl;
+			break;
 		}
-		std::cout << "Processed chat message packet from user ID: " << ID << std::endl;
-		break;
-	}
-	case P_CircleData: //Packet type: circle data
-	{
-		Circle* circle = new Circle();
-		if (!GetCircle(ID, *circle))
+		case P_CircleData: //Packet type: circle data
 		{
+			Circle* circle = new Circle();
+			if (!GetCircle(ID, *circle))
+			{
+				delete circle;
+				return false;
+			}
+			for (int i = 0; i < TotalConnections; i++)
+			{
+				if (i == ID) //If connection is the user who sent the message...
+					continue;//Skip to the next user since there is no purpose in sending the message back to the user who sent it.
+				if (!SendCircle(i, *circle)) //Send message to connection at index i, if message fails to be sent...
+				{
+					std::cout << "Failed to send circle data from client ID: " << ID << " to client ID: " << i << std::endl;
+				}
+			}
+			std::cout << circle->m_radius << " is the radius of the circle of player with id " << ID << std::endl;
+			std::cout << "	their x coordinate is " << circle->m_xPos << std::endl;
+			std::cout << "	their y coordinate is " << circle->m_yPos << std::endl;
 			delete circle;
-			return false;
+			break;
 		}
-		for (int i = 0; i < TotalConnections; i++)
+		default: //If packet type is not accounted for
 		{
-			if (i == ID) //If connection is the user who sent the message...
-				continue;//Skip to the next user since there is no purpose in sending the message back to the user who sent it.
-			if (!SendCircle(i, *circle)) //Send message to connection at index i, if message fails to be sent...
-			{
-				//std::cout << "Failed to send circle data from client ID: " << ID << " to client ID: " << i << std::endl;
-			}
+			std::cout << "Unrecognized packet: " << _packettype << std::endl; //Display that packet was not found
+			break;
 		}
-		std::cout << circle->m_radius << " is the radius of the circle of player with id " << ID << std::endl;
-		std::cout << "	their x coordinate is " << circle->m_xPos << std::endl;
-		std::cout << "	their y coordinate is " << circle->m_yPos << std::endl;
-		delete circle;
-		break;
-	}
-	default: //If packet type is not accounted for
-	{
-		std::cout << "Unrecognized packet: " << _packettype << std::endl; //Display that packet was not found
-		break;
-	}
 	}
 	return true;
 }

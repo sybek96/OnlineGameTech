@@ -115,4 +115,11 @@ bool Client::GetCircle(Circle & _circle)
 	return true;
 }
 
+bool Client::getBoolean(bool _bool)
+{
+	if (!recvall((char*)&_bool, sizeof(bool))) //Try to receive bool... If bool fails to be recv'd
+		return false; //Return false: Int not successfully received
+	return true;//Return true if we were successful in retrieving the bool
+}
+
 

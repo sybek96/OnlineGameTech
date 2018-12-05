@@ -6,14 +6,16 @@
 #include <string> //For std::string
 #include <iostream> //For std::cout, std::endl, std::cin.getline
 #include "Circle.h"
+//Deal with cyclical referencing
+class Game;
 
 enum Packet
 {
 	P_ChatMessage,
 	P_Test,
-	P_CircleData
+	P_CircleData,
+	P_Authoritative
 };
-
 class Client
 {
 public: //Public functions
@@ -24,6 +26,7 @@ public: //Public functions
 	bool SendCircle(Circle& _circle);
 
 	bool CloseConnection();
+	void setGame(Game* _game) { game = _game; }
 private: //Private functions
 	bool ProcessPacket(Packet _packettype);
 	static void ClientThread();
@@ -39,11 +42,15 @@ private: //Private functions
 	bool GetPacketType(Packet & _packettype);
 	bool GetString(std::string & _string);
 	bool GetCircle(Circle& _circle);
+	bool getBoolean(bool _bool);
 
 private:
 	SOCKET Connection;//This client's connection to the server
 	SOCKADDR_IN addr; //Address to be binded to our Connection socket
 	int sizeofaddr = sizeof(addr); //Need sizeofaddr for the connect function
+	//hold pointer to the game object in order to be able to alter the game
+	Game* game;
 };
 
 static Client * clientptr; //This client ptr is necessary so that the ClientThread method can access the Client instance/methods. Since the ClientThread method is static, this is the simplest workaround I could think of since there will only be one instance of the client.
+#include "Game.h"

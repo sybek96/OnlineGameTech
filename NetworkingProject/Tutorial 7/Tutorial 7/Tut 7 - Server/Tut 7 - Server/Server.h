@@ -5,12 +5,14 @@
 #include <string>
 #include <iostream>
 #include "Circle.h"
+#include <vector>
 
 enum Packet
 {
 	P_ChatMessage,
 	P_Test,
-	P_CircleData
+	P_CircleData,
+	P_Authoritative
 };
 
 class Server
@@ -40,8 +42,11 @@ private:
 	static void ClientHandlerThread(int ID);
 
 private:
-	SOCKET Connections[100];
+	SOCKET Connections[3];
 	int TotalConnections = 0;
+	int maxRoomConnections = 3;
+	int currentRoomConnections = 0;
+	
 	
 	SOCKADDR_IN addr; //Address that we will bind our listening socket to
 	int addrlen = sizeof(addr);
