@@ -4,8 +4,8 @@
 #include <WinSock2.h>
 #include <string>
 #include <iostream>
-#include "Circle.h"
 #include <vector>
+#include "Circle.h"
 
 enum Packet
 {

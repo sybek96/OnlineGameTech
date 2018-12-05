@@ -28,6 +28,7 @@ public:
 	void close();
 	//draw method
 	void draw();
+	void update();
 
 	void setPlayer(Circle newPlayer);
 
@@ -65,6 +66,7 @@ private:
 	bool isAuthorative = false;
 	//hold pointer to session to be able to call server functions in the game
 	Client* session;
+	int m_playerSpeed = 2;
 };
 
 #include "Client.h"

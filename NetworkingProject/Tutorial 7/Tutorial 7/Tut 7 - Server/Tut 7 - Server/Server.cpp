@@ -56,7 +56,7 @@ bool Server::ListenForNewConnection()
 			SendPacketType(TotalConnections, P_Authoritative);
 
 			//create player 1 circle and send data to that client
-			Circle playerCircle(10, 10, 10, Color::RED);
+			Circle playerCircle(50, 100, 100, Color::RED);
 			sendSetPlayer(TotalConnections, playerCircle);
 		}
 		else if (TotalConnections == 1) //player 2

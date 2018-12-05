@@ -106,7 +106,20 @@ bool Game::loadMedia()
 		printf("Failed to load texture image green.png!\n");
 		success = false;
 	}
-
+	switch (m_player.m_color)
+	{
+	case Color::RED:
+		m_player.setTexture(textureRedCircle);
+		break;
+	case Color::BLUE:
+		m_player.setTexture(textureBlueCircle);
+		break;
+	case Color::GREEN:
+		m_player.setTexture(textureGreenCircle);
+		break;
+	default:
+		break;
+	}
 	return success;
 }
 
@@ -147,28 +160,20 @@ void Game::draw()
 		SDL_RenderCopy(gRenderer, gTexture2, NULL, rect);
 		rect->x += rect->w;
 	}
+	m_player.draw(gRenderer);
 
 	//Update screen
 	SDL_RenderPresent(gRenderer);
 }
 
+void Game::update()
+{
+	m_player.update();
+}
+
 void Game::setPlayer(Circle newPlayer)
 {
-	//m_player = newPlayer;
-	//switch (m_player.m_color)
-	//{
-	//case Color::RED:
-	//	m_player.SetTexture(textureRedCircle);
-	//	break;
-	//case Color::BLUE:
-	//	m_player.SetTexture(textureBlueCircle);
-	//	break;
-	//case Color::GREEN:
-	//	m_player.SetTexture(textureGreenCircle);
-	//	break;
-	//default:
-	//	break;
-	//}
+	m_player = newPlayer;
 }
 
 void Game::setAuthorative(bool newState)
@@ -247,6 +252,26 @@ void Game::loop()
 						{
 							quit = true;
 						}
+						if (e.key.keysym.sym == SDLK_d)
+						{
+							m_player.m_xPos+= speed;
+							session->SendCircle(m_player);
+						}
+						if (e.key.keysym.sym == SDLK_a)
+						{
+							m_player.m_xPos-= speed;
+							session->SendCircle(m_player);
+						}
+						if (e.key.keysym.sym == SDLK_w)
+						{
+							m_player.m_yPos-= speed;
+							session->SendCircle(m_player);
+						}
+						if (e.key.keysym.sym == SDLK_s)
+						{
+							m_player.m_yPos+= speed;
+							session->SendCircle(m_player);
+						}
 						break;
 					case SDL_MOUSEBUTTONDOWN:
 						break;
@@ -254,7 +279,7 @@ void Game::loop()
 						break;
 					}
 				}
-
+				update();
 				draw();
 			}
 		}
