@@ -254,22 +254,22 @@ void Game::loop()
 						}
 						if (e.key.keysym.sym == SDLK_d)
 						{
-							m_player.m_xPos+= speed;
+							m_player.m_xPos+= m_playerSpeed;
 							session->SendCircle(m_player);
 						}
 						if (e.key.keysym.sym == SDLK_a)
 						{
-							m_player.m_xPos-= speed;
+							m_player.m_xPos-= m_playerSpeed;
 							session->SendCircle(m_player);
 						}
 						if (e.key.keysym.sym == SDLK_w)
 						{
-							m_player.m_yPos-= speed;
+							m_player.m_yPos-= m_playerSpeed;
 							session->SendCircle(m_player);
 						}
 						if (e.key.keysym.sym == SDLK_s)
 						{
-							m_player.m_yPos+= speed;
+							m_player.m_yPos+= m_playerSpeed;
 							session->SendCircle(m_player);
 						}
 						break;
