@@ -29,6 +29,7 @@ bool Client::ProcessPacket(Packet _packettype)
 	case P_Authoritative: //If packet is authoritative type
 	{
 		game->setAuthorative(true);
+		break;
 	}
 	default: //If packet type is not accounted for
 		std::cout << "Unrecognized packet: " << _packettype << std::endl; //Display that packet was not found
