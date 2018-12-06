@@ -1,6 +1,9 @@
 ﻿  Client.cpp
   Game.cpp
+c:\users\sybek96\desktop\y4\onlinegametech\networkingproject\tutorial 7\tutorial 7\tut 7 - client\tut 7 - client\game.cpp(185): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\sybek96\desktop\y4\onlinegametech\networkingproject\tutorial 7\tutorial 7\tut 7 - client\tut 7 - client\game.cpp(186): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\sybek96\desktop\y4\onlinegametech\networkingproject\tutorial 7\tutorial 7\tut 7 - client\tut 7 - client\game.cpp(188): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
   SendGetMethods.cpp
+  Source.cpp
   Generating Code...
-  LINK : C:\Users\Sebastian\Desktop\git-projects\OnlineGameTech\NetworkingProject\Tutorial 7\Tutorial 7\Tut 7 - Client\Debug\Tut 7 - Client.exe not found or not built by the last incremental link; performing full link
-  Tut 7 - Client.vcxproj -> C:\Users\Sebastian\Desktop\git-projects\OnlineGameTech\NetworkingProject\Tutorial 7\Tutorial 7\Tut 7 - Client\Debug\Tut 7 - Client.exe
+  Tut 7 - Client.vcxproj -> C:\Users\sybek96\Desktop\Y4\OnlineGameTech\NetworkingProject\Tutorial 7\Tutorial 7\Tut 7 - Client\Debug\Tut 7 - Client.exe

@@ -23,6 +23,16 @@ bool Client::ProcessPacket(Packet _packettype)
 			return false;
 		}
 		std::cout << "I got data from another circle with radius of:" + std::to_string(circle->m_radius) << std::endl;
+		if (!game->isEnemyInit())
+		{
+			game->setEnemy(*circle);
+			game->setEnemyInit(true);
+			SendCircle(game->getPlayer());
+		}
+		else
+		{
+			game->setEnemyPos(circle->m_xPos, circle->m_yPos);
+		}
 		delete circle;
 		break;
 	}
@@ -40,7 +50,17 @@ bool Client::ProcessPacket(Packet _packettype)
 			return false;
 		}
 		game->setPlayer(*circle);
+		//send out our circle if we are being set
+		SendCircle(*circle);
 		delete circle;
+		break;
+	}
+	case P_EndGame:
+	{
+		if (!getEndGame())
+		{
+			return false;
+		}
 		break;
 	}
 	default: //If packet type is not accounted for

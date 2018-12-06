@@ -102,7 +102,7 @@ bool Server::SendCircle(int ID, Circle & _circle)
 bool Server::GetCircle(int ID, Circle & _circle)
 {
 	int bufferLength; 
-//RECEIVE BUFFER LENGTH
+	//RECEIVE BUFFER LENGTH
 	if (!GetInt(ID, bufferLength))
 		return false;
 	Circle* tempCircle = new Circle(); //create a circle object that will hold received data
@@ -114,6 +114,38 @@ bool Server::GetCircle(int ID, Circle & _circle)
 	}
 	_circle = *tempCircle; //if success assign temp circle data to the actual circle
 	delete tempCircle; //delete new object and return true
+	return true;
+}
+
+bool Server::getEndGame(int ID, bool & _end)
+{
+	int bufferLength = sizeof(bool); //set size of the buffer to be size of circle object
+	//RECEIVE BUFFER LENGTH
+	if(!GetInt(ID, bufferLength))
+		return false;
+	bool* gameEnd = new bool();
+	//RECEIVE OBJECT
+	if (!recvall(ID, (char*)gameEnd, bufferLength)) //receive circle data giving in the temporary object and the length of buffer
+	{
+		return false;
+	}
+	_end = gameEnd;
+	std::cout << "I received the end game state!" << std::endl;
+	return true;
+}
+
+bool Server::sendEndGame(int ID, bool & _end)
+{
+	//SEND PACKET TYPE
+	if (!SendPacketType(ID, P_EndGame))
+		return false;
+	int bufferLength = sizeof(bool);
+	//SEND BUFFER LENGTH
+	if (!SendInt(ID, bufferLength))
+		return false;
+	//SEND OBJECT DATA
+	if (!sendall(ID, (char*)&_end, bufferLength))
+		return false;
 	return true;
 }
 

@@ -31,8 +31,15 @@ public:
 	void update();
 
 	void setPlayer(Circle newPlayer);
+	void setEnemy(Circle enemy);
+	void setEnemyPos(int x, int y);
 
 	void setAuthorative(bool newState);
+	bool isEnemyInit() { return m_enemyInit; }
+	void setEnemyInit(bool state) { m_enemyInit = state; }
+	Circle getPlayer() { return m_player; }
+	void setEndGame(bool state) { m_gameEnd = state; }
+	bool getEndGame() { return m_gameEnd; }
 
 private:
 	//Screen dimension constants
@@ -62,11 +69,17 @@ private:
 	std::vector<SDL_Texture*> m_wallTextures;
 
 	Circle m_player;
+	Circle m_enemy;
 
 	bool isAuthorative = false;
 	//hold pointer to session to be able to call server functions in the game
 	Client* session;
 	int m_playerSpeed = 2;
+	bool m_enemyInit = false;
+	//used when the server sends info on textures prior to loading
+	bool m_loadedMedia = false;
+
+	bool m_gameEnd = false;
 };
 
 #include "Client.h"

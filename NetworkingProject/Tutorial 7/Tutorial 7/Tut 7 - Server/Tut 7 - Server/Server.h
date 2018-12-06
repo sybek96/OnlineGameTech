@@ -13,7 +13,8 @@ enum Packet
 	P_Test,
 	P_CircleData,
 	P_Authoritative,
-	P_SetPlayer
+	P_SetPlayer,
+	P_EndGame
 };
 
 class Server
@@ -31,6 +32,9 @@ private:
 
 	bool SendCircle(int ID, Circle & _circle);
 	bool GetCircle(int ID, Circle & _circle);
+
+	bool getEndGame(int ID, bool& _end);
+	bool sendEndGame(int ID, bool& _end);
 
 	bool SendPacketType(int ID, Packet _packettype);
 	bool GetPacketType(int ID, Packet & _packettype);
@@ -54,6 +58,8 @@ private:
 	SOCKADDR_IN addr; //Address that we will bind our listening socket to
 	int addrlen = sizeof(addr);
 	SOCKET sListen;
+	bool enemy1Initialized = false;
+	bool enemy2Initialized = false;
 };
 
 static Server * serverptr; //Serverptr is necessary so the static ClientHandler method can access the server instance/functions.

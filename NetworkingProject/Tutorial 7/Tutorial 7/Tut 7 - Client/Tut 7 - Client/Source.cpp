@@ -18,10 +18,6 @@ int main()
 		system("pause");
 		return 1;
 	}
-	Circle m_circle = Circle(20, 10, 10, Color::BLUE);
-
-	//attempt to send circle object
-	myClient->SendCircle(m_circle);
 
 	game = new Game(myClient);
 	myClient->setGame(game);

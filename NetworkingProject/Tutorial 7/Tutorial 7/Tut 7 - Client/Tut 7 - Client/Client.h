@@ -15,7 +15,8 @@ enum Packet
 	P_Test,
 	P_CircleData,
 	P_Authoritative,
-	P_SetPlayer
+	P_SetPlayer,
+	P_EndGame
 };
 class Client
 {
@@ -25,6 +26,7 @@ public: //Public functions
 
 	bool SendString(std::string & _string);
 	bool SendCircle(Circle& _circle);
+	bool sendEndGame(bool& _end);
 
 	bool CloseConnection();
 	void setGame(Game* _game) { game = _game; }
@@ -34,6 +36,7 @@ private: //Private functions
 	//Sending Funcs
 	bool sendall(char * data, int totalbytes);
 	bool SendInt(int _int);
+	bool sendBoolean(bool _boolean);
 	bool SendPacketType(Packet _packettype);
 	
 
@@ -44,6 +47,7 @@ private: //Private functions
 	bool GetString(std::string & _string);
 	bool GetCircle(Circle& _circle);
 	bool getBoolean(bool _bool);
+	bool getEndGame();
 
 private:
 	SOCKET Connection;//This client's connection to the server

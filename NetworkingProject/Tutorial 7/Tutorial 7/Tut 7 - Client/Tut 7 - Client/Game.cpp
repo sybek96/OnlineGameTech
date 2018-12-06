@@ -72,6 +72,7 @@ bool Game::init()
 
 bool Game::loadMedia()
 {
+	m_loadedMedia = true;
 	//Loading success flag
 	bool success = true;
 
@@ -143,24 +144,31 @@ void Game::close()
 
 void Game::draw()
 {
+	if (m_enemy.texture == NULL)
+	{
+		switch (m_enemy.m_color)
+		{
+		case Color::RED:
+			m_enemy.setTexture(textureRedCircle);
+			break;
+		case Color::BLUE:
+			m_enemy.setTexture(textureBlueCircle);
+			break;
+		case Color::GREEN:
+			m_enemy.setTexture(textureGreenCircle);
+			break;
+		default:
+			break;
+		}
+	}
 	//Clear screen
 	SDL_RenderClear(gRenderer);
 
-	//Render texture to screen
+	//Render background texture to screen
 	SDL_RenderCopy(gRenderer, gTexture, NULL, NULL);
-	SDL_Rect* rect = new SDL_Rect();
-	rect->h = 100;
-	rect->w = 200;
-	rect->x = 300;
-	rect->y = 200;
-	SDL_RenderCopy(gRenderer, gTexture2, NULL, rect);
 
-	for (auto& wall : m_wallTextures)
-	{
-		SDL_RenderCopy(gRenderer, gTexture2, NULL, rect);
-		rect->x += rect->w;
-	}
 	m_player.draw(gRenderer);
+	m_enemy.draw(gRenderer);
 
 	//Update screen
 	SDL_RenderPresent(gRenderer);
@@ -168,12 +176,59 @@ void Game::draw()
 
 void Game::update()
 {
-	m_player.update();
+	if (!m_gameEnd)
+	{
+		m_player.update();
+		m_enemy.update();
+		if (isAuthorative)
+		{
+			float vectPlayerToEnemyX = m_enemy.m_xPos - m_player.m_xPos;
+			float vectPlayerToEnemyY = m_enemy.m_yPos - m_player.m_yPos;
+			float lenPlayerToEnemy = sqrt((vectPlayerToEnemyX * vectPlayerToEnemyX) + (vectPlayerToEnemyY * vectPlayerToEnemyY)); //srt( a^2, b^2)
+			float lenRadii = m_player.m_radius + m_enemy.m_radius;
+			if (lenPlayerToEnemy <= lenRadii)
+			{
+				//collision!!
+				std::cout << "COLLISION JUST HAPPENED OMG" << std::endl;
+				m_gameEnd = true;
+				session->sendEndGame(m_gameEnd);
+			}
+			
+		}
+	}
 }
 
 void Game::setPlayer(Circle newPlayer)
 {
 	m_player = newPlayer;
+}
+
+void Game::setEnemy(Circle enemy)
+{
+	m_enemy.m_xPos = enemy.m_xPos;
+	m_enemy.m_yPos = enemy.m_yPos;
+	m_enemy.playerRect = enemy.playerRect;
+	m_enemy.m_color = enemy.m_color;
+	switch (m_enemy.m_color)
+	{
+	case Color::RED:
+		m_enemy.setTexture(textureRedCircle);
+		break;
+	case Color::BLUE:
+		m_enemy.setTexture(textureBlueCircle);
+		break;
+	case Color::GREEN:
+		m_enemy.setTexture(textureGreenCircle);
+		break;
+	default:
+		break;
+	}
+}
+
+void Game::setEnemyPos(int x, int y)
+{
+	m_enemy.m_xPos = x;
+	m_enemy.m_yPos = y;
 }
 
 void Game::setAuthorative(bool newState)

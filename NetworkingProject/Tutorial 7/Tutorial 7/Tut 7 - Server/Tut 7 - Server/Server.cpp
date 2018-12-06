@@ -61,11 +61,9 @@ bool Server::ListenForNewConnection()
 		}
 		else if (TotalConnections == 1) //player 2
 		{
-
-		}
-		else //player 3
-		{
-
+			//create player 1 circle and send data to that client
+			Circle playerCircle(50, 500, 500, Color::BLUE);
+			sendSetPlayer(TotalConnections, playerCircle);
 		}
 		TotalConnections += 1; //Incremenent total # of clients that have connected
 		return true;
@@ -115,6 +113,27 @@ bool Server::ProcessPacket(int ID, Packet _packettype)
 			std::cout << "	their x coordinate is " << circle->m_xPos << std::endl;
 			std::cout << "	their y coordinate is " << circle->m_yPos << std::endl;
 			delete circle;
+			break;
+		}
+		case P_EndGame:
+		{
+			std::cout << "ENDGAME RECEIVED" << std::endl;
+			bool* endgame = new bool();
+			if (!getEndGame(ID, *endgame))
+			{
+				delete endgame;
+				return false;
+			}
+			for (int i = 0; i < TotalConnections; i++)
+			{
+				if (i == ID) //If connection is the user who sent the message...
+					continue;//Skip to the next user since there is no purpose in sending the message back to the user who sent it.
+				if (!sendEndGame(i, *endgame)) //Send message to connection at index i, if message fails to be sent...
+				{
+					std::cout << "Failed to send endgame data from client ID: " << ID << " to client ID: " << i << std::endl;
+				}
+			}
+			delete endgame;
 			break;
 		}
 		default: //If packet type is not accounted for

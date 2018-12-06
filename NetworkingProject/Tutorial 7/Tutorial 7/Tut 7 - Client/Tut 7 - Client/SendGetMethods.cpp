@@ -32,6 +32,13 @@ bool Client::SendInt(int _int)
 	return true; //Return true: int successfully sent
 }
 
+bool Client::sendBoolean(bool _boolean)
+{
+	if (!sendall((char*)&_boolean, sizeof(bool)))
+		return false;
+	return true;
+}
+
 bool Client::GetInt(int & _int)
 {
 	if (!recvall((char*)&_int, sizeof(int))) //Try to receive int... If int fails to be recv'd
@@ -80,6 +87,21 @@ bool Client::SendCircle(Circle& _circle)
 	return true;
 }
 
+bool Client::sendEndGame(bool & _end)
+{
+	//SEND PACKET TYPE
+	if (!SendPacketType(P_EndGame))
+		return false;
+	int bufferLength = sizeof(bool);
+	//SEND BUFFER LENGTH
+	if (!SendInt(bufferLength))
+		return false;
+	//SEND DATA
+	if(!sendall((char*)&_end, bufferLength))
+		return false;
+	return true;
+}
+
 bool Client::GetString(std::string & _string)
 {
 	int bufferlength; //Holds length of the message
@@ -120,6 +142,23 @@ bool Client::getBoolean(bool _bool)
 	if (!recvall((char*)&_bool, sizeof(bool))) //Try to receive bool... If bool fails to be recv'd
 		return false; //Return false: Int not successfully received
 	return true;//Return true if we were successful in retrieving the bool
+}
+
+bool Client::getEndGame()
+{
+	int bufferLength = sizeof(bool); //set size of the buffer to be size of circle object
+	//RECEIVE BUFFER LENGTH
+	if (!GetInt(bufferLength))
+		return false;
+	bool* gameEnd = new bool();
+	//RECEIVE OBJECT
+	if (!recvall((char*)gameEnd, bufferLength)) //receive circle data giving in the temporary object and the length of buffer
+	{
+		return false;
+	}
+	game->setEndGame(gameEnd);
+	std::cout << "I received the end game state!" << std::endl;
+	return true;
 }
 
 
